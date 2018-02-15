@@ -5,4 +5,5 @@
     <string name="bullet">•</string>
     <string name="next_button_text">Next</string>
     <string name="previous_button_text">Previous</string>
+    <string name="appwidget_text">AppWidgetText</string>
 </resources>

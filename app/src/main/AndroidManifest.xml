@@ -27,6 +27,15 @@
             android:name=".StepDetailActivity"
             android:parentActivityName=".DetailActivity" />
 
+        <activity
+            android:name=".RecipeWidgetConfigurationActivity"
+            android:excludeFromRecents="true"
+            android:label="Select a Recipe" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <receiver android:name=".StepDetailFragment$StepDetailMediaReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
@@ -41,6 +50,14 @@
         <service
             android:name=".sync.RecipeSyncIntentService"
             android:exported="false" />
+        <receiver android:name=".RecipeWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_widget_provider_info" />
+        </receiver>
     </application>
 
 </manifest>

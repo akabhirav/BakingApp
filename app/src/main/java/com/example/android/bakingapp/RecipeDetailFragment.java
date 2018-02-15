@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.example.android.bakingapp.data.StepAdapter;
 import com.example.android.bakingapp.db.RecipeContract;
 import com.example.android.bakingapp.db.RecipeContract.RecipeEntry;
 import com.example.android.bakingapp.db.RecipeContract.StepEntry;

@@ -1,20 +1,15 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.data;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.bakingapp.data.Step;
-import com.example.android.bakingapp.db.RecipeContract;
+import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.db.RecipeContract.StepEntry;
-
-import java.util.ArrayList;
 
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder> {
 
@@ -24,7 +19,7 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
     private int selectedPosition;
     private boolean selectableList;
 
-    StepAdapter(StepAdapterOnClickHandler clickHandler, boolean selectableList) {
+    public StepAdapter(StepAdapterOnClickHandler clickHandler, boolean selectableList) {
         this.mClickHandler = clickHandler;
         this.selectableList = selectableList;
     }
@@ -34,7 +29,7 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
         notifyDataSetChanged();
     }
 
-    interface StepAdapterOnClickHandler {
+    public interface StepAdapterOnClickHandler {
         void onClick(int position);
     }
 
