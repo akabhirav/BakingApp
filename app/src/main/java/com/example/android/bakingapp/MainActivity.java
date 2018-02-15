@@ -7,6 +7,8 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.android.bakingapp.data.Recipe;
 import com.example.android.bakingapp.data.RecipeLoader;
@@ -19,14 +21,15 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int RECIPE_LOADER = 1;
 
-    RecyclerView mRecipesRecyclerView;
+    private ProgressBar mRecipesProgressBar;
     private RecipeAdapter mRecipeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mRecipesRecyclerView = findViewById(R.id.rv_recipes);
+        mRecipesProgressBar = findViewById(R.id.pb_recipes_loader);
+        RecyclerView mRecipesRecyclerView = findViewById(R.id.rv_recipes);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecipesRecyclerView.setLayoutManager(mLayoutManager);
         mRecipesRecyclerView.setHasFixedSize(true);
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public Loader<ArrayList<Recipe>> onCreateLoader(int id, Bundle args) {
+        mRecipesProgressBar.setVisibility(View.VISIBLE);
         return new RecipeLoader(this);
     }
 
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onLoadFinished(Loader<ArrayList<Recipe>> loader, ArrayList<Recipe> data) {
+        mRecipesProgressBar.setVisibility(View.GONE);
         mRecipeAdapter.swapRecipeList(data);
     }
 
@@ -68,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public void onLoaderReset(Loader<ArrayList<Recipe>> loader) {
-
     }
 
     @Override
