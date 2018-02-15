@@ -1,11 +1,8 @@
 package com.example.android.bakingapp;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,7 +18,6 @@ import android.widget.Toast;
 
 import com.example.android.bakingapp.data.Step;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -86,6 +82,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             initializeMediaSession();
             initializePlayer(Uri.parse(mStep.getThumbnailURL()), currentPosition);
         } else {
+            mStepDescriptionTextView.setVisibility(View.VISIBLE);
             mPlayerView.setVisibility(View.GONE);
         }
         if (mStepDescriptionTextView != null)

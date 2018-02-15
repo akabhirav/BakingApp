@@ -48,13 +48,13 @@ public class StepDetailActivity extends AppCompatActivity {
         showHideActionBar(getResources().getConfiguration());
         if (savedInstanceState == null) {
             Intent starterIntent = getIntent();
-            if (starterIntent != null && starterIntent.hasExtra("Steps") && starterIntent.hasExtra("position")) {
-                mSteps = starterIntent.getParcelableArrayListExtra("Steps");
+            if (starterIntent != null && starterIntent.hasExtra("steps") && starterIntent.hasExtra("position")) {
+                mSteps = starterIntent.getParcelableArrayListExtra("steps");
                 mCurrentPosition = starterIntent.getIntExtra("position", 0);
                 mPageAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
                 mPager.setAdapter(mPageAdapter);
-                if (starterIntent.hasExtra("RecipeName")) {
-                    setTitle(starterIntent.getStringExtra("RecipeName"));
+                if (starterIntent.hasExtra("recipe_name")) {
+                    setTitle(starterIntent.getStringExtra("recipe_name"));
                 }
                 mPager.setCurrentItem(mCurrentPosition, true);
             }

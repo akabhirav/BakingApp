@@ -1,6 +1,7 @@
 package com.example.android.bakingapp;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.data.Recipe;
+import com.example.android.bakingapp.db.RecipeContract;
+import com.example.android.bakingapp.db.RecipeContract.RecipeEntry;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdapterViewHolder> {
-    private ArrayList<Recipe> mRecipes;
+    private Cursor mRecipes;
     private RecipeAdapterOnClickHandler mClickHandler;
     private Context mContext;
 
@@ -24,7 +27,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     }
 
     public interface RecipeAdapterOnClickHandler {
-        void onClick(Recipe recipe);
+        void onClick(int recipeId, String recipeName);
     }
 
     @Override
@@ -37,15 +40,16 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
     @Override
     public void onBindViewHolder(RecipeAdapterViewHolder holder, int position) {
-        Recipe recipe = mRecipes.get(position);
-        holder.mRecipeNameTextView.setText(recipe.getName());
-        String imagePath = recipe.getImage();
-        if (!imagePath.equals(""))
-            Picasso.with(mContext).load(recipe.getImage()).placeholder(R.drawable.recipes_generic).error(R.drawable.recipes_generic);
+        if(mRecipes.moveToPosition(position)) {
+            holder.mRecipeNameTextView.setText(mRecipes.getString(mRecipes.getColumnIndex(RecipeEntry.COLUMN_NAME)));
+            String imagePath = mRecipes.getString(mRecipes.getColumnIndex(RecipeEntry.COLUMN_IMAGE));
+            if (!imagePath.equals(""))
+                Picasso.with(mContext).load(imagePath).placeholder(R.drawable.recipes_generic).error(R.drawable.recipes_generic);
+        }
 
     }
 
-    void swapRecipeList(ArrayList<Recipe> recipes) {
+    void swapCursor(Cursor recipes) {
         this.mRecipes = recipes;
         notifyDataSetChanged();
     }
@@ -58,7 +62,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     @Override
     public int getItemCount() {
         if (mRecipes == null) return 0;
-        return mRecipes.size();
+        return mRecipes.getCount();
     }
 
     class RecipeAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -79,8 +83,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
          */
         @Override
         public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            mClickHandler.onClick(mRecipes.get(adapterPosition));
+            mRecipes.moveToPosition(getAdapterPosition());
+            mClickHandler.onClick(
+                    mRecipes.getInt(mRecipes.getColumnIndex(RecipeEntry.COLUMN_RECIPE_ID)),
+                    mRecipes.getString(mRecipes.getColumnIndex(RecipeEntry.COLUMN_NAME))
+            );
         }
     }
 }

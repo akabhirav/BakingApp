@@ -20,13 +20,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetailActivity" android:parentActivityName=".MainActivity" />
-        <activity android:name=".StepDetailActivity" android:parentActivityName=".DetailActivity" />
+        <activity
+            android:name=".DetailActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".StepDetailActivity"
+            android:parentActivityName=".DetailActivity" />
+
         <receiver android:name=".StepDetailFragment$StepDetailMediaReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
+
+        <provider
+            android:name=".db.RecipeProvider"
+            android:authorities="com.example.android.bakingapp"
+            android:exported="false" />
+
+        <service
+            android:name=".sync.RecipeSyncIntentService"
+            android:exported="false" />
     </application>
 
 </manifest>

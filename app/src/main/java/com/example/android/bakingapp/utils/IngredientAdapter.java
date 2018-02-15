@@ -1,6 +1,7 @@
 package com.example.android.bakingapp.utils;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,18 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
-import com.example.android.bakingapp.StepAdapter;
-import com.example.android.bakingapp.data.Ingredient;
-
-import java.util.ArrayList;
+import com.example.android.bakingapp.db.RecipeContract.IngredientEntry;
 
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.IngredientAdapterViewHolder> {
 
-    private ArrayList<Ingredient> ingredients;
-
-    public IngredientAdapter(ArrayList<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
+    private Cursor ingredients;
 
     @Override
     public IngredientAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -31,16 +25,22 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
 
     @Override
     public void onBindViewHolder(IngredientAdapterViewHolder holder, int position) {
-        Ingredient ingredient = ingredients.get(position);
-        holder.mIngredientText.setText(String.format("%s %s %s", ingredient.getQuantity(),
-                ingredient.getMeasure(),
-                ingredient.getIngredient()));
+        ingredients.moveToPosition(position);
+        holder.mIngredientText.setText(String.format("%s %s %s",
+                ingredients.getString(ingredients.getColumnIndex(IngredientEntry.COLUMN_QUANTITY)),
+                ingredients.getString(ingredients.getColumnIndex(IngredientEntry.COLUMN_MEASURE)),
+                ingredients.getString(ingredients.getColumnIndex(IngredientEntry.COLUMN_INGREDIENT))));
     }
 
     @Override
     public int getItemCount() {
         if (ingredients == null) return 0;
-        return ingredients.size();
+        return ingredients.getCount();
+    }
+
+    public void swapCursor(Cursor data) {
+        ingredients = data;
+        notifyDataSetChanged();
     }
 
     class IngredientAdapterViewHolder extends RecyclerView.ViewHolder {

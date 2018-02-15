@@ -1,6 +1,7 @@
 package com.example.android.bakingapp;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
@@ -10,21 +11,27 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.data.Step;
+import com.example.android.bakingapp.db.RecipeContract;
+import com.example.android.bakingapp.db.RecipeContract.StepEntry;
 
 import java.util.ArrayList;
 
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterViewHolder> {
 
     private StepAdapterOnClickHandler mClickHandler;
-    private ArrayList<Step> mSteps;
+    private Cursor mSteps;
     private Context mContext;
     private int selectedPosition;
     private boolean selectableList;
 
-    StepAdapter(StepAdapterOnClickHandler clickHandler, ArrayList<Step> steps, boolean selectableList) {
+    StepAdapter(StepAdapterOnClickHandler clickHandler, boolean selectableList) {
         this.mClickHandler = clickHandler;
-        this.mSteps = steps;
         this.selectableList = selectableList;
+    }
+
+    public void swapCursor(Cursor data) {
+        mSteps = data;
+        notifyDataSetChanged();
     }
 
     interface StepAdapterOnClickHandler {
@@ -41,8 +48,8 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
 
     @Override
     public void onBindViewHolder(StepAdapterViewHolder holder, int position) {
-        Step step = mSteps.get(position);
-        if(selectableList) {
+        mSteps.moveToPosition(position);
+        if (selectableList) {
             if (selectedPosition == position) {
                 holder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimaryLight));
                 holder.mStepShortDescTextView.setTextColor(mContext.getResources().getColor(android.R.color.white));
@@ -51,13 +58,15 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
                 holder.mStepShortDescTextView.setTextColor(mContext.getResources().getColor(android.R.color.black));
             }
         }
-        holder.mStepShortDescTextView.setText(step.getDescription());
+        holder.mStepShortDescTextView.setText(
+                mSteps.getString(mSteps.getColumnIndex(StepEntry.COLUMN_DESCRIPTION))
+        );
     }
 
     @Override
     public int getItemCount() {
         if (mSteps == null) return 0;
-        return mSteps.size();
+        return mSteps.getCount();
     }
 
     class StepAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
