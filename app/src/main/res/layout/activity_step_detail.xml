@@ -6,30 +6,35 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.bakingapp.StepDetailActivity">
 
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/playerView"
-        android:layout_width="0dp"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/step_detail_container"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintBottom_toTopOf="@+id/tv_step_instruction"
+        android:layout_marginBottom="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button_previous"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_step_instruction"
+    <Button
+        android:id="@+id/button_previous"
         android:layout_width="wrap_content"
-        app:layout_constraintVertical_weight="1"
-        android:layout_height="0dp"
-        android:padding="8dp"
-        tools:text="2. Whisk the graham cracker crumbs, 50 grams (1/4 cup) of sugar, and 1/2 teaspoon of salt together in a medium bowl. Pour the melted butter and 1 teaspoon of vanilla into the dry ingredients and stir together until evenly mixed."
+        android:layout_height="wrap_content"
+        android:text="@string/previous_button_text"
+        android:onClick="onClickPrevious"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playerView" />
+        app:layout_constraintRight_toLeftOf="@id/button_next"
+        app:layout_constraintTop_toBottomOf="@id/step_detail_container" />
 
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onClickNext"
+        android:text="@string/next_button_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/button_previous"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/step_detail_container" />
 </android.support.constraint.ConstraintLayout>

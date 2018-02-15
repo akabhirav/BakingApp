@@ -1,7 +1,9 @@
 package com.example.android.bakingapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +17,24 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
 
     private StepAdapterOnClickHandler mClickHandler;
     private ArrayList<Step> mSteps;
+    private Context mContext;
+    private int selectedPosition;
+    private boolean selectableList;
 
-    StepAdapter(StepAdapterOnClickHandler clickHandler, ArrayList<Step> steps){
+    StepAdapter(StepAdapterOnClickHandler clickHandler, ArrayList<Step> steps, boolean selectableList) {
         this.mClickHandler = clickHandler;
         this.mSteps = steps;
+        this.selectableList = selectableList;
     }
 
-    interface StepAdapterOnClickHandler{
-        void onClick(Step step);
+    interface StepAdapterOnClickHandler {
+        void onClick(int position);
     }
+
     @Override
     public StepAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        LayoutInflater inflater = LayoutInflater.from(context);
+        mContext = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(mContext);
         View rootView = inflater.inflate(R.layout.step_list_layout, parent, false);
         return new StepAdapterViewHolder(rootView);
     }
@@ -35,28 +42,41 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepAdapterVie
     @Override
     public void onBindViewHolder(StepAdapterViewHolder holder, int position) {
         Step step = mSteps.get(position);
-        holder.mStepShortDescTextView.setText(step.getShortDescription());
+        if(selectableList) {
+            if (selectedPosition == position) {
+                holder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimaryLight));
+                holder.mStepShortDescTextView.setTextColor(mContext.getResources().getColor(android.R.color.white));
+            } else {
+                holder.itemView.setBackgroundColor(mContext.getResources().getColor(android.R.color.white));
+                holder.mStepShortDescTextView.setTextColor(mContext.getResources().getColor(android.R.color.black));
+            }
+        }
+        holder.mStepShortDescTextView.setText(step.getDescription());
     }
 
     @Override
     public int getItemCount() {
-        if(mSteps == null) return 0;
+        if (mSteps == null) return 0;
         return mSteps.size();
     }
 
-    class StepAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class StepAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView mStepShortDescTextView;
 
         StepAdapterViewHolder(View itemView) {
             super(itemView);
-            mStepShortDescTextView = itemView.findViewById(R.id.tv_step_short_desc);
+            mStepShortDescTextView = itemView.findViewById(R.id.tv_step_desc);
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            mClickHandler.onClick(mSteps.get(adapterPosition));
+            mClickHandler.onClick(adapterPosition);
+            if (selectableList) {
+                selectedPosition = adapterPosition;
+                notifyDataSetChanged();
+            }
         }
     }
 }
