@@ -1,4 +1,4 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.data;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,12 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.bakingapp.data.Recipe;
-import com.example.android.bakingapp.db.RecipeContract;
+import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.db.RecipeContract.RecipeEntry;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdapterViewHolder> {
@@ -22,7 +19,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
     private RecipeAdapterOnClickHandler mClickHandler;
     private Context mContext;
 
-    RecipeAdapter(RecipeAdapterOnClickHandler clickHandler) {
+    public RecipeAdapter(RecipeAdapterOnClickHandler clickHandler) {
         this.mClickHandler = clickHandler;
     }
 
@@ -49,7 +46,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
     }
 
-    void swapCursor(Cursor recipes) {
+    public void swapCursor(Cursor recipes) {
         this.mRecipes = recipes;
         notifyDataSetChanged();
     }

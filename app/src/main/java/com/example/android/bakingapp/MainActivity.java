@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.android.bakingapp.data.RecipeAdapter;
 import com.example.android.bakingapp.db.RecipeContract;
 import com.example.android.bakingapp.db.RecipeContract.RecipeEntry;
 import com.example.android.bakingapp.sync.RecipeSyncUtils;
