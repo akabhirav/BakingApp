@@ -10,7 +10,7 @@ import android.widget.RemoteViews;
 public class RecipeWidgetProvider extends AppWidgetProvider {
     private static final String PREFS_NAME = "AppWidget";
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId){
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         CharSequence widgetTitle = RecipeWidgetConfigurationActivity.loadTitlePrefTitle(context, appWidgetId);
         CharSequence widgetText = RecipeWidgetConfigurationActivity.loadTitlePrefText(context, appWidgetId);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);

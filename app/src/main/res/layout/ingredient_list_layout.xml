@@ -2,20 +2,20 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
     <TextView
         android:id="@+id/tv_bullet"
         style="@style/TextAppearance.AppCompat.Display1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/bullet"
         android:layout_marginEnd="8dp"
-        app:layout_constraintHorizontal_weight="1"
+        android:text="@string/bullet"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/tv_ingredient_text"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,9 +24,9 @@
         android:id="@+id/tv_ingredient_text"
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="0dp"
-        app:layout_constraintHorizontal_weight="2"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="2"
         app:layout_constraintLeft_toRightOf="@id/tv_bullet"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"

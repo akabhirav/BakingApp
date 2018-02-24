@@ -3,6 +3,7 @@ package com.example.android.bakingapp;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 
 public class StepDetailFragment extends Fragment implements Player.EventListener {
@@ -41,6 +44,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     private static final String STATE_STEP = "step";
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
+    private ImageView mPlayerImageView;
     private Step mStep;
 
     private static final String TAG = StepDetailFragment.class.getName();
@@ -74,16 +78,24 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         }
         final View rootView = inflater.inflate(R.layout.step_detail_fragment, container, false);
         mPlayerView = rootView.findViewById(R.id.playerView);
+        mPlayerImageView = rootView.findViewById(R.id.playerImageView);
         TextView mStepDescriptionTextView = rootView.findViewById(R.id.tv_step_instruction);
         if (!mStep.getVideoURL().equals("")) {
+            if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+                mStepDescriptionTextView.setVisibility(View.GONE);
+            mPlayerView.setVisibility(View.VISIBLE);
+            mPlayerImageView.setVisibility(View.GONE);
             initializeMediaSession();
             initializePlayer(Uri.parse(mStep.getVideoURL()), currentPosition);
         } else if (!mStep.getThumbnailURL().equals("")) {
-            initializeMediaSession();
-            initializePlayer(Uri.parse(mStep.getThumbnailURL()), currentPosition);
+            mPlayerView.setVisibility(View.GONE);
+            mStepDescriptionTextView.setVisibility(View.VISIBLE);
+            mPlayerImageView.setVisibility(View.VISIBLE);
+            Picasso.with(getContext()).load(Uri.parse(mStep.getThumbnailURL())).into(mPlayerImageView);
         } else {
             mStepDescriptionTextView.setVisibility(View.VISIBLE);
             mPlayerView.setVisibility(View.GONE);
+            mPlayerImageView.setVisibility(View.GONE);
         }
         if (mStepDescriptionTextView != null)
             mStepDescriptionTextView.setText(mStep.getDescription());
@@ -142,8 +154,8 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
         releasePlayer();
     }
 

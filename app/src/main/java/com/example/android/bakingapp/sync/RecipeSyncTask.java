@@ -20,8 +20,9 @@ import java.util.ArrayList;
 class RecipeSyncTask {
 
     private static final String TAG = RecipeSyncTask.class.getName();
+
     synchronized static void syncRecipes(Context context) {
-        try{
+        try {
             URL requestUrl = NetworkUtils.buildUrl();
             String jsonResponse = NetworkUtils.getResponseFromHttpUrl(requestUrl);
             ArrayList<Recipe> recipes;
@@ -29,20 +30,20 @@ class RecipeSyncTask {
             Cursor recipeIds = context.getContentResolver()
                     .query(RecipeEntry.CONTENT_URI, new String[]{RecipeEntry.COLUMN_RECIPE_ID},
                             null, null, null);
-            if(recipeIds != null) {
+            if (recipeIds != null) {
                 ArrayList<Integer> recipeIdsInResponse = new ArrayList<>();
                 ArrayList<Integer> recipeIdsInDb = new ArrayList<>();
                 for (Recipe recipe : recipes) {
                     recipeIdsInResponse.add(recipe.getId());
                 }
-                while (recipeIds.moveToNext()){
+                while (recipeIds.moveToNext()) {
                     recipeIdsInDb.add(recipeIds.getInt(recipeIds.getColumnIndex(RecipeEntry.COLUMN_RECIPE_ID)));
                 }
                 recipeIdsInResponse.removeAll(recipeIdsInDb);
                 if (recipeIdsInResponse.size() > 0) {
                     ArrayList<Recipe> newRecipes = new ArrayList<>();
-                    for(Recipe recipe : recipes){
-                        if(recipeIdsInResponse.contains(recipe.getId())){
+                    for (Recipe recipe : recipes) {
+                        if (recipeIdsInResponse.contains(recipe.getId())) {
                             newRecipes.add(recipe);
                         }
                     }
@@ -55,12 +56,12 @@ class RecipeSyncTask {
 
         } catch (IOException e) {
             Log.e(TAG, "HTTP: Some error during http request");
-        } catch (Exception e){
+        } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
     }
 
-    private static void massInsert(Context context, ArrayList<Recipe> newRecipes){
+    private static void massInsert(Context context, ArrayList<Recipe> newRecipes) {
         for (Recipe recipe : newRecipes) {
             ArrayList<ContentValues> stepContentValuesArrayList = new ArrayList<>();
             ArrayList<ContentValues> ingredientContentValuesArrayList = new ArrayList<>();

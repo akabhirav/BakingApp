@@ -13,23 +13,39 @@
         android:layout_marginLeft="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="0dp"
-        app:layout_constraintVertical_weight="1"
         app:layout_constraintBottom_toTopOf="@+id/tv_step_instruction"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1" />
+
+    <ImageView
+        android:id="@+id/playerImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:contentDescription="@string/step_image"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/tv_step_instruction"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_weight="1" />
 
     <TextView
         android:id="@+id/tv_step_instruction"
+        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
-        app:layout_constraintVertical_weight="1"
         android:layout_height="0dp"
         android:padding="16dp"
-        style="@style/TextAppearance.AppCompat.Medium"
-        tools:text="2. Whisk the graham cracker crumbs, 50 grams (1/4 cup) of sugar, and 1/2 teaspoon of salt together in a medium bowl. Pour the melted butter and 1 teaspoon of vanilla into the dry ingredients and stir together until evenly mixed."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playerView" />
+        app:layout_constraintTop_toBottomOf="@+id/playerView"
+        app:layout_constraintVertical_weight="1"
+        tools:text="2. Whisk the graham cracker crumbs, 50 grams (1/4 cup) of sugar, and 1/2 teaspoon of salt together in a medium bowl. Pour the melted butter and 1 teaspoon of vanilla into the dry ingredients and stir together until evenly mixed." />
 
 </android.support.constraint.ConstraintLayout>

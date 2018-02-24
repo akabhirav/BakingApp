@@ -100,7 +100,7 @@ public class NetworkUtils {
                 ArrayList<Step> steps = new ArrayList<>();
                 ArrayList<Ingredient> ingredients = new ArrayList<>();
                 int j;
-                for (j = 0; j < stepsJSON.length(); j++){
+                for (j = 0; j < stepsJSON.length(); j++) {
                     JSONObject step = stepsJSON.getJSONObject(j);
                     int id = step.getInt("id");
                     String shortDescription = step.getString("shortDescription");
@@ -109,7 +109,7 @@ public class NetworkUtils {
                     String thumbnailURL = step.getString("thumbnailURL");
                     steps.add(new Step(id, shortDescription, description, videoURL, thumbnailURL));
                 }
-                for (j = 0; j < ingredientsJSON.length(); j++){
+                for (j = 0; j < ingredientsJSON.length(); j++) {
                     JSONObject ingredient = ingredientsJSON.getJSONObject(j);
                     double quantity = ingredient.getDouble("quantity");
                     String measure = ingredient.getString("measure");

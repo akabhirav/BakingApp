@@ -6,4 +6,5 @@
     <string name="next_button_text">Next</string>
     <string name="previous_button_text">Previous</string>
     <string name="appwidget_text">AppWidgetText</string>
+    <string name="step_image">Step Image</string>
 </resources>

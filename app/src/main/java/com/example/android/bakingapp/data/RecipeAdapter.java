@@ -37,11 +37,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
 
     @Override
     public void onBindViewHolder(RecipeAdapterViewHolder holder, int position) {
-        if(mRecipes.moveToPosition(position)) {
+        if (mRecipes.moveToPosition(position)) {
             holder.mRecipeNameTextView.setText(mRecipes.getString(mRecipes.getColumnIndex(RecipeEntry.COLUMN_NAME)));
             String imagePath = mRecipes.getString(mRecipes.getColumnIndex(RecipeEntry.COLUMN_IMAGE));
             if (!imagePath.equals(""))
-                Picasso.with(mContext).load(imagePath).placeholder(R.drawable.recipes_generic).error(R.drawable.recipes_generic);
+                Picasso.with(mContext)
+                        .load(imagePath)
+                        .placeholder(R.drawable.recipes_generic)
+                        .error(R.drawable.recipes_generic)
+                        .into(holder.mRecipeImageImageView);
         }
 
     }
