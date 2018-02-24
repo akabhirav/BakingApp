@@ -12,7 +12,7 @@
         <TextView
             android:id="@+id/tv_ingredients_label"
             style="@style/TextAppearance.AppCompat.Large"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/ingredients_label"
             app:layout_constraintBottom_toTopOf="@id/rv_ingredients"
@@ -42,7 +42,7 @@
         <TextView
             android:id="@+id/tv_steps_label"
             style="@style/TextAppearance.AppCompat.Large"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/instructions_label"
             app:layout_constraintBottom_toTopOf="@id/rv_steps"

@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.android.bakingapp.data.Step;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -42,6 +43,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     private static final String ARG_STEP = "step";
     private static final String STATE_CURRENT_PLAYER_POSITION = "current_player_position";
     private static final String STATE_STEP = "step";
+    private static final String STATE_PLAYER_PLAYBACK_STATE = "current_playback_state";
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
     private ImageView mPlayerImageView;
@@ -72,28 +74,26 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         long currentPosition = 0;
+        boolean currentPlaybackState = true;
         if (savedInstanceState != null) {
             mStep = savedInstanceState.getParcelable(STATE_STEP);
             currentPosition = savedInstanceState.getLong(STATE_CURRENT_PLAYER_POSITION, 0);
+            currentPlaybackState = savedInstanceState.getBoolean(STATE_PLAYER_PLAYBACK_STATE, true);
         }
         final View rootView = inflater.inflate(R.layout.step_detail_fragment, container, false);
         mPlayerView = rootView.findViewById(R.id.playerView);
         mPlayerImageView = rootView.findViewById(R.id.playerImageView);
         TextView mStepDescriptionTextView = rootView.findViewById(R.id.tv_step_instruction);
         if (!mStep.getVideoURL().equals("")) {
-            if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-                mStepDescriptionTextView.setVisibility(View.GONE);
             mPlayerView.setVisibility(View.VISIBLE);
             mPlayerImageView.setVisibility(View.GONE);
             initializeMediaSession();
-            initializePlayer(Uri.parse(mStep.getVideoURL()), currentPosition);
+            initializePlayer(Uri.parse(mStep.getVideoURL()), currentPosition, currentPlaybackState);
         } else if (!mStep.getThumbnailURL().equals("")) {
             mPlayerView.setVisibility(View.GONE);
-            mStepDescriptionTextView.setVisibility(View.VISIBLE);
             mPlayerImageView.setVisibility(View.VISIBLE);
             Picasso.with(getContext()).load(Uri.parse(mStep.getThumbnailURL())).into(mPlayerImageView);
         } else {
-            mStepDescriptionTextView.setVisibility(View.VISIBLE);
             mPlayerView.setVisibility(View.GONE);
             mPlayerImageView.setVisibility(View.GONE);
         }
@@ -125,15 +125,16 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(STATE_STEP, mStep);
-        if (mExoPlayer != null)
+        if (mExoPlayer != null) {
             outState.putLong(STATE_CURRENT_PLAYER_POSITION, mExoPlayer.getCurrentPosition());
+            outState.putBoolean(STATE_PLAYER_PLAYBACK_STATE, mExoPlayer.getPlayWhenReady());
+        }
     }
 
-    private void initializePlayer(Uri mediaUri, long currentPosition) {
+    private void initializePlayer(Uri mediaUri, long currentPosition, boolean currentPlaybackState) {
         if (mExoPlayer == null) {
             TrackSelector trackSelector = new DefaultTrackSelector();
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
-            mPlayerView.setPlayer(mExoPlayer);
             String userAgent = Util.getUserAgent(getContext(), getString(R.string.app_name));
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri,
                     new DefaultDataSourceFactory(getContext(), userAgent),
@@ -141,7 +142,8 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
                     null, null);
             mExoPlayer.prepare(mediaSource, false, true);
             mExoPlayer.seekTo(currentPosition);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(currentPlaybackState);
+            mPlayerView.setPlayer(mExoPlayer);
         }
     }
 
@@ -154,8 +156,8 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
+        super.onStop();
         releasePlayer();
     }
 
