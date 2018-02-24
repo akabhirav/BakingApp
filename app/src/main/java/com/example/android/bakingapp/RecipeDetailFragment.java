@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.example.android.bakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.android.bakingapp.data.StepAdapter;
 import com.example.android.bakingapp.db.RecipeContract;
 import com.example.android.bakingapp.db.RecipeContract.RecipeEntry;
@@ -34,6 +36,7 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepAd
     private StepAdapter mStepAdapter;
     private IngredientAdapter mIngredientAdapter;
     private ProgressBar mStepsProgressBar, mIngredientsProgressBar;
+    private SimpleIdlingResource mStepIdlingResource, mIngredientIdlingResource;
 
     public RecipeDetailFragment() {
     }
@@ -66,9 +69,16 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepAd
         mStepsRecyclerView.setHasFixedSize(true);
         mStepAdapter = new StepAdapter(this, recipeDetailFragmentCallbacks.setSelectableStepList());
         mStepsRecyclerView.setAdapter(mStepAdapter);
+        mIngredientIdlingResource = getIngredientIdlingResource();
+        mStepIdlingResource = getStepIdlingResource();
+        return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         getActivity().getSupportLoaderManager().initLoader(STEPS_LOADER, null, this);
         getActivity().getSupportLoaderManager().initLoader(INGREDIENTS_LOADER, null, this);
-        return rootView;
     }
 
     @Override
@@ -84,12 +94,14 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepAd
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case STEPS_LOADER:
+                mStepIdlingResource.setIdleState(false);
                 mStepsProgressBar.setVisibility(View.VISIBLE);
                 return new CursorLoader(getContext(),
                         StepEntry.getContentUri(recipeId),
                         new String[]{StepEntry.COLUMN_DESCRIPTION},
                         null, null, null);
             case INGREDIENTS_LOADER:
+                mIngredientIdlingResource.setIdleState(false);
                 mIngredientsProgressBar.setVisibility(View.VISIBLE);
                 return new CursorLoader(getContext(),
                         RecipeEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(recipeId))
@@ -108,10 +120,12 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepAd
             case STEPS_LOADER:
                 mStepsProgressBar.setVisibility(View.GONE);
                 mStepAdapter.swapCursor(data);
+                mStepIdlingResource.setIdleState(true);
                 break;
             case INGREDIENTS_LOADER:
                 mIngredientsProgressBar.setVisibility(View.GONE);
                 mIngredientAdapter.swapCursor(data);
+                mIngredientIdlingResource.setIdleState(true);
                 break;
             default:
                 Log.e(TAG, "Unknown Loader with id" + loaderId);
@@ -144,5 +158,15 @@ public class RecipeDetailFragment extends Fragment implements StepAdapter.StepAd
     public void onClick(int position) {
         if (recipeDetailFragmentCallbacks != null)
             recipeDetailFragmentCallbacks.onStepClickedHandler(position);
+    }
+
+    public SimpleIdlingResource getStepIdlingResource() {
+        if (mStepIdlingResource == null) return new SimpleIdlingResource();
+        return mStepIdlingResource;
+    }
+
+    public SimpleIdlingResource getIngredientIdlingResource() {
+        if (mIngredientIdlingResource == null) return new SimpleIdlingResource();
+        return mIngredientIdlingResource;
     }
 }

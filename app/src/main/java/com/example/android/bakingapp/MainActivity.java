@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.android.bakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.android.bakingapp.data.RecipeAdapter;
 import com.example.android.bakingapp.db.RecipeContract;
 import com.example.android.bakingapp.db.RecipeContract.RecipeEntry;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private ProgressBar mRecipesProgressBar;
     private RecipeAdapter mRecipeAdapter;
+    public SimpleIdlingResource mIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +39,20 @@ public class MainActivity extends AppCompatActivity implements
         mRecipesRecyclerView.setHasFixedSize(true);
         mRecipeAdapter = new RecipeAdapter(this);
         mRecipesRecyclerView.setAdapter(mRecipeAdapter);
+        RecipeSyncUtils.startImmediateSync(this);
+        mIdlingResource = getIdlingResource();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         LoaderManager loaderManager = getSupportLoaderManager();
         loaderManager.initLoader(RECIPE_CURSOR_LOADER, null, this);
-        RecipeSyncUtils.startImmediateSync(this);
+    }
+
+    public SimpleIdlingResource getIdlingResource() {
+        if(mIdlingResource == null) return new SimpleIdlingResource();
+        return mIdlingResource;
     }
 
     /**
@@ -51,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        mIdlingResource.setIdleState(false);
         mRecipesProgressBar.setVisibility(View.VISIBLE);
         return new CursorLoader(this, RecipeEntry.CONTENT_URI,
                 null, null, null, null);
@@ -60,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mRecipesProgressBar.setVisibility(View.GONE);
         mRecipeAdapter.swapCursor(data);
+        mIdlingResource.setIdleState(true);
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import com.example.android.bakingapp.IdlingResource.SimpleIdlingResource;
 import com.example.android.bakingapp.data.Step;
 import com.example.android.bakingapp.db.RecipeContract.StepEntry;
 
@@ -35,6 +37,13 @@ public class DetailActivity extends AppCompatActivity implements
     private ArrayList<Step> mSteps;
     private ProgressBar mStepDetailsProgressBar;
     private FrameLayout mStepDetailFrameLayout;
+    private SimpleIdlingResource mChangeStepDetailIdlingResource;
+    public RecipeDetailFragment mRecipeDetailFragment;
+
+    public SimpleIdlingResource getChangeStepDetailIdlingResource(){
+        if(mChangeStepDetailIdlingResource == null) return new SimpleIdlingResource();
+        return mChangeStepDetailIdlingResource;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +64,9 @@ public class DetailActivity extends AppCompatActivity implements
                 recipeId = starterIntent.getIntExtra("recipe_id", 0);
                 recipeName = starterIntent.getStringExtra("recipe_name");
                 setTitle(recipeName);
-                RecipeDetailFragment recipeDetailFragment = RecipeDetailFragment.create(recipeId);
+                mRecipeDetailFragment = RecipeDetailFragment.create(recipeId);
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().add(R.id.recipe_detail_container, recipeDetailFragment).commit();
+                fragmentManager.beginTransaction().add(R.id.recipe_detail_container, mRecipeDetailFragment).commit();
                 if (mTwoPane) {
                     mStepDetailsProgressBar = findViewById(R.id.pb_step_details);
                     mStepDetailFrameLayout = findViewById(R.id.step_detail_container);
@@ -65,6 +74,7 @@ public class DetailActivity extends AppCompatActivity implements
                 getSupportLoaderManager().initLoader(STEP_DETAIL_LOADER, null, this);
             }
         }
+        mChangeStepDetailIdlingResource = getChangeStepDetailIdlingResource();
     }
 
     @Override
@@ -89,6 +99,7 @@ public class DetailActivity extends AppCompatActivity implements
     @Override
     public void onStepClickedHandler(int position) {
         if (mTwoPane) {
+            mChangeStepDetailIdlingResource.setIdleState(false);
             StepDetailFragment stepDetailFragment = StepDetailFragment.create(mSteps.get(position));
             getSupportFragmentManager().beginTransaction().replace(R.id.step_detail_container, stepDetailFragment).commit();
         } else {
@@ -139,6 +150,7 @@ public class DetailActivity extends AppCompatActivity implements
                     if (msg.what == WHAT) {
                         StepDetailFragment stepDetailFragment = StepDetailFragment.create(mSteps.get(0));
                         getSupportFragmentManager().beginTransaction().add(R.id.step_detail_container, stepDetailFragment).commit();
+                        mChangeStepDetailIdlingResource.setIdleState(true);
                     }
                 }
             };
