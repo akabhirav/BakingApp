@@ -7,7 +7,10 @@ import android.view.View;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-
+/**
+ * This file was copied in most part from github.com and belongs to user https://github.com/dannyroa
+ * The exact file is on https://github.com/dannyroa/espresso-samples/blob/master/RecyclerView/app/src/androidTest/java/com/dannyroa/espresso_samples/recyclerview/RecyclerViewMatcher.java
+ * */
 public class RecyclerViewMatcher {
     private final int recyclerViewId;
 

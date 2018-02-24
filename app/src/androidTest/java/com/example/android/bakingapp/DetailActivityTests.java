@@ -55,8 +55,12 @@ public class DetailActivityTests {
     public void activityTitle_matchesRecipeName(){
         onView(isAssignableFrom(Toolbar.class)).check(matches(withToolbarTitle(is((CharSequence) RECIPE_NAME))));
     }
-    private static Matcher<Object> withToolbarTitle(
-            final Matcher<CharSequence> textMatcher) {
+
+    /**
+     * This method{@link withToolbarTitle} was obtained from github.com and belongs to user https://github.com/chiuki
+     * The exact file is on https://github.com/chiuki/espresso-samples/blob/master/toolbar-title/app/src/androidTest/java/com/sqisland/espresso/toolbar_title/MainActivityTest.java
+     * */
+    private static Matcher<Object> withToolbarTitle(final Matcher<CharSequence> textMatcher) {
         return new BoundedMatcher<Object, Toolbar>(Toolbar.class) {
             @Override public boolean matchesSafely(Toolbar toolbar) {
                 return textMatcher.matches(toolbar.getTitle());
